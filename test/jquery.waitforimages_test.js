@@ -138,4 +138,29 @@
 
     });
 
+    module("Avoid callbacks being fired when elements are removed", setup);
+
+    asyncTest("img & css", function() {
+
+        expect(1);
+
+        var callbacks = 0;
+
+        this.container.waitForImages(function(){
+            callbacks++;
+            ok(false, "Finished callback fired.");
+        }, function() {
+            callbacks++;
+            ok(false, "Each callback fired for a " + $(this).prop("tagName") + " element.");
+        }, true);
+
+        this.container.remove();
+
+        setTimeout(function() {
+            ok(callbacks === 0, "Finished with " + callbacks + " callbacks fired.");
+            start();
+        }, 300);
+
+    });
+
 }(jQuery));
