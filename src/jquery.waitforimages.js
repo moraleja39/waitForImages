@@ -116,7 +116,10 @@
                 var image;
 
                 if (img.isImg) { image = img.element; }
-                else { image = new Image(); }
+                else {
+                    image = new Image();
+                    $(image).css("display",  "none").appendTo(img.element);
+                }
 
                 var events = 'load.' + eventNamespace + ' error.' + eventNamespace;
 
@@ -127,8 +130,9 @@
                     // If an error occurred with loading the image, set the third argument accordingly.
                     eachCallback.call(img.element, allImgsLoaded, allImgsLength, event.type == 'load');
 
-                    // Unbind the event listener.
-                    $(this).off(events, me);
+                    // Unbind the event listener. Removing the helper dom element will do it too
+                    if (!img.isImg) { $(this).off(events, me); }
+                    else { $(image).remove(); }
 
                     if (allImgsLoaded == allImgsLength) {
                         finishedCallback.call(obj[0]);
@@ -136,10 +140,6 @@
                     }
 
                 });
-
-                if(!img.isImg) {
-                    $(image).css("display",  "none").appendTo(img.element);
-                }
 
                 image.src = img.src;
             });
