@@ -1,4 +1,4 @@
-/*! waitForImages jQuery Plugin - v1.6.4 - 2014-10-27
+/*! waitForImages jQuery Plugin - v1.6.4 - 2014-10-28
 * https://github.com/alexanderdickson/waitForImages
 * Copyright (c) 2014 Alex Dickson; Licensed MIT */
 ;(function ($) {
@@ -70,7 +70,8 @@
                     if (element.is('img:uncached')) {
                         allImgs.push({
                             src: element.attr('src'),
-                            element: element[0]
+                            element: element[0],
+                            isImg: true
                         });
                     }
 
@@ -87,7 +88,8 @@
                         while (match = matchUrl.exec(propertyValue)) {
                             allImgs.push({
                                 src: match[2],
-                                element: element[0]
+                                element: element[0],
+                                isImg: false
                             });
                         }
                     });
@@ -98,7 +100,8 @@
                     .each(function () {
                     allImgs.push({
                         src: this.src,
-                        element: this
+                        element: this,
+                        isImg: true
                     });
                 });
             }
@@ -113,7 +116,11 @@
 
             $.each(allImgs, function (i, img) {
 
-                var image = new Image();
+                var image;
+
+                if (img.isImg) { image = img.element; }
+                else { image = new Image(); }
+
                 var events = 'load.' + eventNamespace + ' error.' + eventNamespace;
 
                 // Handle the image loading and error with the same callback.
@@ -132,6 +139,10 @@
                     }
 
                 });
+
+                if(!img.isImg) {
+                    $(image).css("display",  "none").appendTo(img.element);
+                }
 
                 image.src = img.src;
             });
