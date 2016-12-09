@@ -36,7 +36,10 @@ module.exports = function(grunt) {
         eqnull: true,
         browser: true,
         globals: {
-          jQuery: true
+          jQuery: true,
+          define: true,
+          module: true,
+          require: true
         }
       },
     },
@@ -58,7 +61,7 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
-  
+
   // Travis CI task.
   grunt.registerTask('travis', ['jshint', 'qunit']);
 
